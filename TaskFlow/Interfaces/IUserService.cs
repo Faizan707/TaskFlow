@@ -7,5 +7,7 @@ namespace TaskFlow.Interfaces
     {
         Users CreateUser(Users user);
         Users? ValidateLogin(LoginDtos login);
+        List<UserListDto> GetAllUsers();
+        UserListDto? UpdateUserRole(int userId, string role);
     }
 }

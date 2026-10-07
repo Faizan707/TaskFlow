@@ -53,6 +53,46 @@ namespace TaskFlow.Services
 
             return user;
         }
-       
+
+        public List<UserListDto> GetAllUsers()
+        {
+            return _context.Users
+                .OrderBy(u => u.Id)
+                .Select(u => new UserListDto
+                {
+                    Id = u.Id,
+                    Name = u.name,
+                    Email = u.email,
+                    Role = u.Role,
+                    CreatedAt = u.CreatedAt
+                })
+                .ToList();
+        }
+
+        public UserListDto? UpdateUserRole(int userId, string role)
+        {
+            var allowedRoles = new[] { "User", "Manager", "Admin" };
+
+            if (!allowedRoles.Contains(role))
+                throw new Exception("Invalid role. Allowed roles: User, Manager, Admin");
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+                return null;
+
+            user.Role = role;
+            user.UpdatedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+
+            return new UserListDto
+            {
+                Id = user.Id,
+                Name = user.name,
+                Email = user.email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt
+            };
+        }
     }
 }

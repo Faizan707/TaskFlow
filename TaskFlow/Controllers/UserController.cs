@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskFlow.DTOs;
-using TaskFlow.Models;
 using TaskFlow.Interfaces;
+using TaskFlow.Models;
 
 namespace TaskFlow.Controllers
 {
@@ -50,6 +51,39 @@ namespace TaskFlow.Controllers
                 message = "Login successful",
                 token = token
             });
+        }
+
+        // Admin: see all users
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult GetUsers()
+        {
+            var users = _userService.GetAllUsers();
+            return Ok(users);
+        }
+
+        // Admin: change a user's role
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{userId}/role")]
+        public IActionResult UpdateUserRole(int userId, UpdateRoleDto dto)
+        {
+            try
+            {
+                var user = _userService.UpdateUserRole(userId, dto.Role);
+
+                if (user == null)
+                    return NotFound(new { message = "User not found" });
+
+                return Ok(new
+                {
+                    message = "Role updated successfully",
+                    user
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
