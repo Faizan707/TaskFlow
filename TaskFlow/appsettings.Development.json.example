@@ -1,0 +1,22 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Database": {
+    "Host": "localhost",
+    "Port": "5432",
+    "Name": "taskflow",
+    "Username": "postgres",
+    "Password": "YOUR_PASSWORD"
+  },
+  "Jwt": {
+    "Key": "my-super-secret-key-12345678901234567890",
+    "ExpireHours": 1
+  },
+  "Cors": {
+    "FrontendUrl": "http://localhost:3000"
+  }
+}
