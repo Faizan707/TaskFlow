@@ -1,4 +1,4 @@
-﻿namespace TaskFlow.DTOs
+namespace TaskFlow.DTOs.Projects
 {
     public class ProjectUpdateDto
     {

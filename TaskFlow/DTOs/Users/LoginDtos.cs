@@ -1,4 +1,4 @@
-﻿namespace TaskFlow.DTOs
+namespace TaskFlow.DTOs.Users
 {
     public class LoginDtos
     {

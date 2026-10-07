@@ -1,4 +1,4 @@
-using TaskFlow.DTOs;
+using TaskFlow.DTOs.Projects;
 using TaskFlow.Models;
 
 namespace TaskFlow.Interfaces

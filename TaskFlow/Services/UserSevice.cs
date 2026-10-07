@@ -1,5 +1,5 @@
 ﻿using TaskFlow.Data;
-using TaskFlow.DTOs;
+using TaskFlow.DTOs.Users;
 using TaskFlow.Interfaces;
 using TaskFlow.Models;
 

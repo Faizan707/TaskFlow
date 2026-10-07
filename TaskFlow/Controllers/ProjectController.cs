@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskFlow.DTOs;
+using TaskFlow.DTOs.Projects;
 using TaskFlow.Interfaces;
 
 namespace TaskFlow.Controllers
