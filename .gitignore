@@ -12,8 +12,10 @@ obj/
 .env
 .env.*
 !.env.example
+appsettings.json
 appsettings.Development.json
 **/appsettings.*.local.json
+!appsettings*.json.example
 
 ## OS
 Thumbs.db
