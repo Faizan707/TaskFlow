@@ -69,6 +69,19 @@ namespace TaskFlow.Services
                 .ToList();
         }
 
+        public List<AssigneeDto> GetAssignees()
+        {
+            return _context.Users
+                .OrderBy(u => u.name)
+                .Select(u => new AssigneeDto
+                {
+                    Id = u.Id,
+                    Name = u.name,
+                    Email = u.email
+                })
+                .ToList();
+        }
+
         public UserListDto? UpdateUserRole(int userId, string role)
         {
             var allowedRoles = new[] { "User", "Manager", "Admin" };

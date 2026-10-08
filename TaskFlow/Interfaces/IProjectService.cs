@@ -5,10 +5,10 @@ namespace TaskFlow.Interfaces
 {
     public interface IProjectService
     {
-        Project CreateProject(Project project, int userId);
-        List<Project> GetAllProjects();
-        List<Project> GetUserProjects(int userId);
-        Project? UpdateProject(
+        ProjectListDto CreateProject(Project project, int userId);
+        List<ProjectListDto> GetAllProjects();
+        List<ProjectListDto> GetUserProjects(int userId);
+        ProjectListDto? UpdateProject(
             int projectId,
             ProjectUpdateDto projectDto,
             int userId,

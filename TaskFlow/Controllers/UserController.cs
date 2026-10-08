@@ -62,6 +62,15 @@ namespace TaskFlow.Controllers
             return Ok(users);
         }
 
+        // Any logged-in user: list for task assignment
+        [Authorize(Roles = "User,Manager,Admin")]
+        [HttpGet("assignees")]
+        public IActionResult GetAssignees()
+        {
+            var assignees = _userService.GetAssignees();
+            return Ok(assignees);
+        }
+
         // Admin: change a user's role
         [Authorize(Roles = "Admin")]
         [HttpPut("{userId}/role")]
