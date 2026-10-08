@@ -13,6 +13,7 @@ namespace TaskFlow.Extensions
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ITasks, TasksService>();
             services.AddScoped<IKanbanStageService, KanbanStageService>();
+            services.AddScoped<IDashboardService, DashboardService>();
 
             return services;
         }

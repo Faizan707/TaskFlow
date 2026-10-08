@@ -47,7 +47,7 @@ namespace TaskFlow.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("KanbanStages");
+                    b.ToTable("KanbanStages", (string)null);
                 });
 
             modelBuilder.Entity("TaskFlow.Models.Project", b =>
@@ -79,7 +79,7 @@ namespace TaskFlow.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Project");
+                    b.ToTable("Project", (string)null);
                 });
 
             modelBuilder.Entity("TaskFlow.Models.Tasks", b =>
@@ -127,7 +127,7 @@ namespace TaskFlow.Migrations
 
                     b.HasIndex("StageId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("TaskFlow.Models.Users", b =>
@@ -162,7 +162,7 @@ namespace TaskFlow.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TaskFlow.Models.KanbanStage", b =>
