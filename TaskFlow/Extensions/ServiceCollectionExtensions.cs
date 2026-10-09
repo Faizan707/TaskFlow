@@ -14,6 +14,7 @@ namespace TaskFlow.Extensions
             services.AddScoped<ITasks, TasksService>();
             services.AddScoped<IKanbanStageService, KanbanStageService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             return services;
         }

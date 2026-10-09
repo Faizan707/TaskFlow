@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -6,12 +5,15 @@ using Microsoft.OpenApi;
 using System.Text;
 using TaskFlow.Data;
 using TaskFlow.Extensions;
+using TaskFlow.Hubs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
 var frontendUrl = builder.Configuration["Cors:FrontendUrl"] ?? "http://localhost:3000";
 
@@ -22,7 +24,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(frontendUrl)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -81,6 +84,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwtKey)
             )
         };
+
+        // SignalR cannot send Authorization header on WebSocket easily,
+        // so the JWT is passed as ?access_token=... for /hubs/* paths.
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
@@ -94,12 +116,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// HTTP-only local profile has no https port; skipping avoids SignalR negotiate issues.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("NextJsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();

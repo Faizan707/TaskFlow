@@ -4,7 +4,7 @@ namespace TaskFlow.Interfaces
 {
     public interface ITasks
     {
-        TaskListDto CreateTask(TaskCreateDto task, int assigneeId);
+        TaskListDto CreateTask(TaskCreateDto task, int assigneeId, int assignedByUserId);
         List<TaskListDto> GetAllTasks();
         List<TaskListDto> GetUserTasks(int userId);
         TaskListDto? UpdateTask(

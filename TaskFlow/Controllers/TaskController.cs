@@ -28,7 +28,15 @@ namespace TaskFlow.Controllers
 
             try
             {
-                var createdTask = _tasksService.CreateTask(taskDto, taskDto.AssigneeId);
+                var assignedByUserId = int.Parse(
+                    User.FindFirst("userId")!.Value
+                );
+
+                var createdTask = _tasksService.CreateTask(
+                    taskDto,
+                    taskDto.AssigneeId,
+                    assignedByUserId
+                );
 
                 return Ok(new
                 {

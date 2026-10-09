@@ -10,14 +10,22 @@ namespace TaskFlow.Services
     {
         private readonly AppDbContext _context;
         private readonly IKanbanStageService _kanbanStageService;
+        private readonly INotificationService _notificationService;
 
-        public TasksService(AppDbContext context, IKanbanStageService kanbanStageService)
+        public TasksService(
+            AppDbContext context,
+            IKanbanStageService kanbanStageService,
+            INotificationService notificationService)
         {
             _context = context;
             _kanbanStageService = kanbanStageService;
+            _notificationService = notificationService;
         }
 
-        public TaskListDto CreateTask(TaskCreateDto taskDto, int assigneeId)
+        public TaskListDto CreateTask(
+            TaskCreateDto taskDto,
+            int assigneeId,
+            int assignedByUserId)
         {
             var assigneeExists = _context.Users.Any(u => u.Id == assigneeId);
             if (!assigneeExists)
@@ -47,6 +55,13 @@ namespace TaskFlow.Services
 
             _context.Tasks.Add(task);
             _context.SaveChanges();
+
+            _notificationService.CreateTaskAssignedNotification(
+                assigneeId,
+                assignedByUserId,
+                task.Id,
+                task.Title
+            );
 
             return ToListDto(task.Id)!;
         }
@@ -83,17 +98,38 @@ namespace TaskFlow.Services
             if (stage == null)
                 return null;
 
+            if (taskDto.AssigneeId <= 0)
+                return null;
+
+            var assigneeExists = _context.Users.Any(u => u.Id == taskDto.AssigneeId);
+            if (!assigneeExists)
+                return null;
+
+            var previousAssigneeId = task.AssigneeId;
+
             task.Title = taskDto.Title;
             task.Description = taskDto.Description;
             task.StageId = taskDto.StageId;
+            task.AssigneeId = taskDto.AssigneeId;
             task.Priority = taskDto.Priority;
             task.Status = ResolveStatusForStage(stage.Name, taskDto.Status);
             task.UpdatedAt = DateTime.UtcNow;
 
             _context.SaveChanges();
 
+            if (previousAssigneeId != taskDto.AssigneeId)
+            {
+                _notificationService.CreateTaskAssignedNotification(
+                    taskDto.AssigneeId,
+                    userId,
+                    task.Id,
+                    task.Title
+                );
+            }
+
             return ToListDto(task.Id);
         }
+
 
         public TaskListDto? MoveTask(
             int taskId,
